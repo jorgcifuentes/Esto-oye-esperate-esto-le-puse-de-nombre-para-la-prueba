@@ -30,7 +30,7 @@ def stock_categoria(productos, inventario, categoria):
         categoria_producto = datos_producto[1]
 
         if categoria_producto.lower() == categoria.lower():
-            if codigo in productos:
+            if codigo in inventario:
                 stock = inventario[codigo][0] # indice 0 = stock
                 total_stock += stock
 
@@ -77,7 +77,7 @@ def agregar_producto(producto, inventario, codigo, nombre, categoria, precio, di
     else:
         disponible_booleano = False
     
-    producto[codigo] = [nombre, precio, categoria, disponible_booleano]
+    producto[codigo] = [nombre, categoria, precio, disponible_booleano]
     inventario[codigo] = [stock, vendidos]
 
     return True
@@ -166,7 +166,7 @@ def ejecutar_busqueda_precio(producto, inventario): # Segunda opcion del menu
         print("El precio minimo no puede ser mayor que el precio maximo")
         return
     
-    resultados = buscar_precio(producto, inventario, p_min, p_max)
+    resultados = buscar_precio(p_min, p_max, producto, inventario)
 
     if len(resultados) > 0:
         print("Los juegos encontrados son: ")
@@ -239,7 +239,109 @@ def ejecutar_agregar_producto(producto, inventario):
     else:
         print("El codigo ya existe")
 
+#
+def ejecutar_actualizar_precio(producto, inventario):
+    codigo = leer_texto_no_vacio("Ingrese el codigo del producto: ").upper()
 
+    if not buscar_codigo(producto, inventario, codigo):
+        print("El codigo no existe")
+        return
+
+    while True:
+        nuevo_precio = leer_entero("Ingrese el nuevo precio: ")
+
+        if validar_precio(nuevo_precio):
+            break
+        else:
+            print("El precio tiene que ser mayor a 0")
+
+    actualizado = actualizar_precio(producto, inventario, codigo, nuevo_precio)
+
+    if actualizado:
+        print("Precio actualizado correctamente")
+    else:
+        print("No se pudo actualizar el precio")
+
+
+def ejecutar_eliminar_producto(producto, inventario):
+    codigo = leer_texto_no_vacio("Ingrese el codigo del producto a eliminar: ").upper()
+
+    if not buscar_codigo(producto, inventario, codigo):
+        print("El codigo no existe")
+        return
+
+    eliminado = eliminar_producto(producto, inventario, codigo)
+
+    if eliminado:
+        print("Producto eliminado correctamente")
+    else:
+        print("No se pudo eliminar el producto")
+
+
+def mostrar_producto(producto, inventario, codigo):
+    if not buscar_codigo(producto, inventario, codigo):
+        return None
+
+    datos_producto = producto[codigo]
+    datos_inventario = inventario[codigo]
+
+    nombre = datos_producto[0]
+    categoria = datos_producto[1]
+    precio = datos_producto[2]
+    disponible_booleano = datos_producto[3]
+    stock = datos_inventario[0]
+    vendidos = datos_inventario[1]
+
+    disponible_texto = "Si" if disponible_booleano else "No"
+
+    print("========== DATOS DEL PRODUCTO ==========")
+    print("Codigo:", codigo)
+    print("Nombre:", nombre)
+    print("Categoria:", categoria)
+    print("Precio:", precio)
+    print("Disponible:", disponible_texto)
+    print("Stock:", stock)
+    print("Vendidos:", vendidos)
+    print("=========================================")
+
+    return True
+
+
+def ejecutar_mostrar_producto(producto, inventario):
+    codigo = leer_texto_no_vacio("Ingrese el codigo del producto: ").upper()
+
+    resultado = mostrar_producto(producto, inventario, codigo)
+
+    if resultado is None:
+        print("El codigo no existe")
+
+
+def main():
+    productos = {}
+    inventario = {}
+
+    while True:
+        mostrar_menu()
+        opcion = leer_opcion()
+
+        if opcion == 1:
+            ejecutar_stock_categoria(productos, inventario)
+        elif opcion == 2:
+            ejecutar_busqueda_precio(productos, inventario)
+        elif opcion == 3:
+            ejecutar_actualizar_precio(productos, inventario)
+        elif opcion == 4:
+            ejecutar_agregar_producto(productos, inventario)
+        elif opcion == 5:
+            ejecutar_eliminar_producto(productos, inventario)
+        elif opcion == 6:
+            ejecutar_mostrar_producto(productos, inventario)
+        elif opcion == 7:
+            print("Saliendo del programa...")
+            break
+
+
+main()
 
 
 
