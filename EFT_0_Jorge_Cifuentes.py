@@ -65,7 +65,10 @@ def actualizar_precio(productos, inventario, codigo, nuevo_precio):
     codigo = codigo.upper
 
     if buscar_codigo(productos, inventario, codigo):
-        
+        productos[codigo][2] = nuevo_precio
+        return True
+
+    return False
 
 
 
