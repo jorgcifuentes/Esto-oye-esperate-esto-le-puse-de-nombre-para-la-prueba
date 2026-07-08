@@ -34,7 +34,7 @@ def stock_categoria(categoria, productos, inventario):
                 stock = inventario[codigo][1]
                 total_stock = total_stock + stock
 
-    return total_stock
+    print(f"El stock disponible es de {total_stock}")
 
 
 def buscar_precio(p_min, p_max, productos, inventario):
@@ -69,6 +69,29 @@ def actualizar_precio(productos, inventario, codigo, nuevo_precio):
         return True
 
     return False
+
+
+def validar_codigo(codigo):
+    return codigo.strip() != ""
+
+def validar_nombre(nombre):
+    return nombre.strip() != ""
+
+def validar_categoria(categoria):
+    return categoria.strip() != ""
+
+def validar_precio(precio):
+    return precio > 0
+
+def validar_disponible(opcion):
+    opcion = opcion.lower()
+    return opcion == "s" or opcion == "n"
+
+def validar_stock(stock):
+    return stock >= 0
+
+def validar_vendidos(vendidos):
+    return vendidos >= 0
 
 
 
