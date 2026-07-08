@@ -22,19 +22,19 @@ def leer_opcion():
             print("Debe ingresar un numero entero")
 
 
-def stock_categoria(categoria, productos, inventario):
+def stock_categoria(productos, inventario, categoria):
     total_stock = 0
 
-    for codigo in categoria:
-        datos_categoria = categoria[codigo]
-        inventario_categoria = datos_categoria[1]
+    for codigo in productos:
+        datos_producto = productos[codigo]
+        categoria_producto = datos_producto[1]
 
-        if inventario_categoria.lower() == productos.lower():
-            if codigo in inventario:
-                stock = inventario[codigo][1]
-                total_stock = total_stock + stock
+        if categoria_producto.lower() == categoria.lower():
+            if codigo in productos:
+                stock = inventario[codigo][0] # indice 0 = stock
+                total_stock += stock
 
-    print(f"El stock disponible es de {total_stock}")
+    print(f"{total_stock}")
 
 
 def buscar_precio(p_min, p_max, productos, inventario):
@@ -61,14 +61,20 @@ def buscar_codigo(productos, inventario, codigo):
     
     return False
 
+
 def actualizar_precio(productos, inventario, codigo, nuevo_precio):
-    codigo = codigo.upper
+    codigo = codigo.upper()
 
     if buscar_codigo(productos, inventario, codigo):
         productos[codigo][2] = nuevo_precio
         return True
 
     return False
+
+
+def validar_codigo_nuevo(productos, inventario, codigo):
+    codigo = codigo.upper()
+    return codigo != "" and codigo not in productos and codigo not in inventario
 
 
 def validar_codigo(codigo):
@@ -83,9 +89,9 @@ def validar_categoria(categoria):
 def validar_precio(precio):
     return precio > 0
 
-def validar_disponible(opcion):
-    opcion = opcion.lower()
-    return opcion == "s" or opcion == "n"
+def validar_disponible(disponible):
+    disponible = disponible.lower()
+    return disponible == "s" or disponible == "n"
 
 def validar_stock(stock):
     return stock >= 0
@@ -94,6 +100,33 @@ def validar_vendidos(vendidos):
     return vendidos >= 0
 
 
+def agregar_producto(producto, inventario, codigo, nombre, categoria, precio, disponible, stock, vendidos):
+    codigo = codigo.upper()
+    disponible = disponible.lower()
+
+    if validar_codigo_nuevo(producto, inventario, codigo):
+        return False
+    
+    if disponible == "s":
+        disponible_booleano = True
+    else:
+        disponible_booleano = False
+    
+    producto[codigo] = [nombre, precio, categoria, disponible_booleano]
+    inventario[codigo] = [stock, vendidos]
+
+    return True
+
+
+def eliminar_producto(producto, inventario, codigo):
+    codigo = codigo.upper
+
+    if buscar_codigo(producto, inventario, codigo):
+        del producto[codigo]
+        del inventario[codigo]
+        return True
+    
+    return False
 
 
 
